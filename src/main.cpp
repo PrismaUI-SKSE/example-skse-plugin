@@ -2,6 +2,7 @@
 #include <keyhandler/keyhandler.h>
 
 PRISMA_UI_API::IVPrismaUI1* PrismaUI;
+static PrismaView view;
 
 static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
 {
@@ -11,17 +12,17 @@ static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
         PrismaUI = static_cast<PRISMA_UI_API::IVPrismaUI1*>(PRISMA_UI_API::RequestPluginAPI(PRISMA_UI_API::InterfaceVersion::V1));
 
         // 2. Create view and call "Invoke" method to send JavaScript code to view when DOM is ready.
-        PrismaView view = PrismaUI->CreateView("PrismaUI-Example-UI/index.html", [](PrismaView view) -> void {
+        view = PrismaUI->CreateView("PrismaUI-Example-UI/index.html", [](PrismaView view) -> void {
             // View DOM is ready then you can use Invoke here (make sure that your JS methods are available after DOM is ready).
             logger::info("View DOM is ready {}", view);
 
             PrismaUI->Invoke(view, "updateFocusLabel('No. But press F3 to focus!')");
-            });
+        });
 
         // 3. Also you could to register JS listener to handling JS methods calls.
         PrismaUI->RegisterJSListener(view, "sendDataToSKSE", [](const char* data) -> void {
             logger::info("Received data from JS: {}", data);
-            });
+        });
 
         // Next lines is custom KEY DOWN / KEY UP realisation which bases at "src/keyhandler".
         KeyHandler::RegisterSink();
@@ -29,7 +30,7 @@ static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
         const uint32_t TOGGLE_FOCUS_KEY = 0x3D; // F3 key
 
         // Press F3 to focus/unfocus view in-game.
-        KeyHandlerEvent toggleEventHandler = keyHandler->Register(TOGGLE_FOCUS_KEY, KeyEventType::KEY_DOWN, [view]() {
+        KeyHandlerEvent toggleEventHandler = keyHandler->Register(TOGGLE_FOCUS_KEY, KeyEventType::KEY_DOWN, []() {
             auto hasFocus = PrismaUI->HasFocus(view);
 
             if (!hasFocus) {
@@ -43,7 +44,7 @@ static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
                 PrismaUI->Unfocus(view);
                 PrismaUI->Invoke(view, "updateFocusLabel('Nah, it is not focused.')");
             }
-            });
+        });
 
         // If you want to unregister the key event handlers:
         // keyHandler->Unregister(toggleEventHandler);

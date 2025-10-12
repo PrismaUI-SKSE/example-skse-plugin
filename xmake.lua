@@ -1,10 +1,10 @@
--- set minimum xmake version
+﻿-- set minimum xmake version
 set_xmakever("2.8.2")
 
 includes("lib/commonlibsse-ng")
 
 set_project("PrismaUI-Example-Plugin")
-set_version("1.0.0")
+set_version("1.1.0")
 set_license("GPL-3.0")
 
 set_languages("c++23")
@@ -13,6 +13,7 @@ set_warnings("allextra")
 set_policy("package.requires_lock", true)
 
 add_rules("mode.release")
+--add_rules("mode.debug", "mode.releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
 
 -- targets

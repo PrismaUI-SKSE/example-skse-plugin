@@ -1,8 +1,8 @@
-# PrismaUI SKSE Plugin Template
+﻿# PrismaUI SKSE Plugin Template
 
 This is a basic plugin template using PrismaUI and CommonLibSSE-NG.
 
-> **You can download ready-to-use plugin for MO2 here: [Download PrismaUI-Example-Plugin](https://github.com/PrismaUI-SKSE/PrismaUI-Wiki/releases)**
+> **You can download ready-to-use plugin for MO2 here: [Download PrismaUI-Example-Plugin](https://github.com/PrismaUI-SKSE/framework/releases)**
 
 ### Requirements
 * [XMake](https://xmake.io) [2.8.2+]
