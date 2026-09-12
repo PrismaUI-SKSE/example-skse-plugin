@@ -12,11 +12,11 @@ static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
         PrismaUI = static_cast<PRISMA_UI_API::IVPrismaUI1*>(PRISMA_UI_API::RequestPluginAPI(PRISMA_UI_API::InterfaceVersion::V1));
 
         // 2. Create view and call "Invoke" method to send JavaScript code to view when DOM is ready.
-        view = PrismaUI->CreateView("PrismaUI-Example-UI/index.html", [](PrismaView view) -> void {
+        view = PrismaUI->CreateView("PrismaUI-Example-UI/index.html", [](PrismaView a_view) -> void {
             // View DOM is ready then you can use Invoke here (make sure that your JS methods are available after DOM is ready).
-            logger::info("View DOM is ready {}", view);
+            logger::info("View DOM is ready {}", a_view);
 
-            PrismaUI->Invoke(view, "updateFocusLabel('No. But press F3 to focus!')");
+            PrismaUI->Invoke(a_view, "updateFocusLabel('No. But press F3 to focus!')");
         });
 
         // 3. Also you could to register JS listener to handling JS methods calls.
@@ -52,7 +52,7 @@ static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
     }
 }
 
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
+extern "C" DLLEXPORT bool SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 {
     REL::Module::reset();
 
@@ -63,8 +63,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
         return false;
     }
 
-    SKSE::Init(a_skse);
-    SKSE::AllocTrampoline(1 << 10);
+    SKSE::Init(a_skse, { .trampoline = true, .trampolineSize = 1 << 10 });
 
     g_messaging->RegisterListener("SKSE", SKSEMessageHandler);
 
